@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,11 +28,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		035F5CD8C014D420F708E0223A6E17E2 /* HCKalmanFilter.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = HCKalmanFilter.modulemap; sourceTree = "<group>"; };
-		0D88CBCC1DD787E0D9A93C9DE66CB665 /* Pods-Geofencing.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-Geofencing.modulemap"; sourceTree = "<group>"; };
+		035F5CD8C014D420F708E0223A6E17E2 /* HCKalmanFilter.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = HCKalmanFilter.modulemap; sourceTree = "<group>"; };
+		0D88CBCC1DD787E0D9A93C9DE66CB665 /* Pods-Geofencing.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Geofencing.modulemap"; sourceTree = "<group>"; };
 		0DEA06ED4CC154C27774A4B7FBC50F5B /* Pods-Geofencing-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Geofencing-umbrella.h"; sourceTree = "<group>"; };
 		2631A5C2E90C0F401B67ACDA6C844F90 /* HCKalmanFilter-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HCKalmanFilter-dummy.m"; sourceTree = "<group>"; };
-		2AF9AAD0FE136C7DEC3B6DE4FC9A1410 /* Pods_Geofencing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Geofencing.framework; path = "Pods-Geofencing.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2AF9AAD0FE136C7DEC3B6DE4FC9A1410 /* Pods_Geofencing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geofencing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CEBADD9CF49105A2A7D3C488E04EB5B /* Pods-Geofencing-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Geofencing-acknowledgements.markdown"; sourceTree = "<group>"; };
 		4D0CECD1D2FB357A6135073DF9A6B24D /* Pods-Geofencing-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Geofencing-frameworks.sh"; sourceTree = "<group>"; };
 		4FFE35C9A2B3F281F11C984FAFB2D10C /* HCMatrixObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HCMatrixObject.swift; path = HCKalmanFilter/HCMatrixObject.swift; sourceTree = "<group>"; };
@@ -44,11 +44,11 @@
 		8770A297D7E51FBC1E95D022AEDEC3C4 /* HCKalmanFilter-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HCKalmanFilter-prefix.pch"; sourceTree = "<group>"; };
 		8ABE37A2B638C8C94062418BA6505EFB /* Pods-Geofencing.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Geofencing.debug.xcconfig"; sourceTree = "<group>"; };
 		8DC409620504BA2B658665AE33CD9EEE /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A2C87ED9D26ECC915DC8F3541583FA9C /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HCKalmanAlgorithm.swift; path = HCKalmanFilter/HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
 		DEEB9BE97639443445A0CED876628C28 /* HCKalmanFilter.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HCKalmanFilter.xcconfig; sourceTree = "<group>"; };
 		E7FC246BEA1C12F8A2B175CE374A5E7B /* Pods-Geofencing-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Geofencing-acknowledgements.plist"; sourceTree = "<group>"; };
-		EE6CBB956F191CFC43C49871550DD6C9 /* HCKalmanFilter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = HCKalmanFilter.framework; path = HCKalmanFilter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE6CBB956F191CFC43C49871550DD6C9 /* HCKalmanFilter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HCKalmanFilter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF8EBA52273A4F52D52ADBB6DEA794FA /* HCKalmanFilter-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HCKalmanFilter-umbrella.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,7 +155,6 @@
 				4FFE35C9A2B3F281F11C984FAFB2D10C /* HCMatrixObject.swift */,
 				A2E5C686FC3642014491AB5D2CD67BD8 /* Support Files */,
 			);
-			name = HCKalmanFilter;
 			path = HCKalmanFilter;
 			sourceTree = "<group>";
 		};
@@ -231,7 +230,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0920;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -365,7 +364,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -373,15 +374,21 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_DEBUG=1",
@@ -414,7 +421,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -422,14 +431,20 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_RELEASE=1",
 					"$(inherited)",

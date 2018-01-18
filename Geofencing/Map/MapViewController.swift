@@ -24,14 +24,7 @@ class MapViewController: UIViewController {
     
     private var mapViewAnchors = [NSLayoutConstraint]()
     
-    private let initialLocation: CLLocation = {
-        
-        let coordinate = CLLocationCoordinate2DMake(10.0282034301162, 76.337425919993)
-        
-        let sLoc = CLLocation(coordinate: coordinate, altitude: 16.055889, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 0.0, timestamp: Date())
-        
-        return sLoc
-    }()
+    private var initialLocation: CLLocation!
     
     // Initialize Core Location manager instance
     
@@ -91,7 +84,7 @@ class MapViewController: UIViewController {
         let sLbl = UILabel()
         sLbl.textColor = .white
         sLbl.font = UIFont(name: "Helvetica Neue", size: 18)
-        sLbl.text = "Significant location change monitoring"
+        sLbl.text = "Start Significant Monitoring"
         sLbl.numberOfLines = 0
         return sLbl
     }()
@@ -157,6 +150,17 @@ class MapViewController: UIViewController {
         return mapSzBtn
     }()
     
+    private let resetBtn: UIButton = {
+        
+        let rBtn = UIButton()
+        rBtn.backgroundColor = .white
+        rBtn.setTitleColor(.blue, for: .normal)
+        rBtn.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 20)
+        rBtn.setTitle("Reset", for: .normal)
+        rBtn.addTarget(self, action: #selector(onResetBtnClick(_:)), for: .touchUpInside)
+        return rBtn
+    }()
+    
     fileprivate func addSubViews() {
         view.addSubview(headerView)
         headerView.addSubview(headerLabel)
@@ -168,6 +172,7 @@ class MapViewController: UIViewController {
         setView.addSubview(requestBtn)
         setView.addSubview(sigSwitch)
         setView.addSubview(mapSwitch)
+        setView.addSubview(resetBtn)
         view.addSubview(logField)
         view.addSubview(mapSizeBtn)
     }
@@ -192,6 +197,9 @@ class MapViewController: UIViewController {
         
         _ = mapSwitch.anchor(mapLabel.topAnchor , left: nil, bottom: nil, right: requestBtn.rightAnchor, topConstant: 25, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 50, heightConstant: 30)
         
+        _ = resetBtn.anchor(nil, left: mapLabel.leftAnchor, bottom: setView.bottomAnchor, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 8, rightConstant: 0, widthConstant: 0, heightConstant: 25)
+        
+        
         _ = logField.anchor(setView.bottomAnchor, left: setView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: setView.rightAnchor, topConstant: 8, leftConstant: 0, bottomConstant: 8, rightConstant: 0, widthConstant: 0, heightConstant: 0)
         
         // Add layout to mapView
@@ -207,6 +215,8 @@ class MapViewController: UIViewController {
         mapView.layer.masksToBounds = true
         requestBtn.layer.cornerRadius = 5.0
         requestBtn.layer.masksToBounds = true
+        resetBtn.layer.cornerRadius = 5.0
+        resetBtn.layer.masksToBounds = true
         mapSwitch.layer.cornerRadius = 5.0
         mapSwitch.layer.masksToBounds = true
         logField.layer.cornerRadius = 5.0
@@ -301,10 +311,12 @@ class MapViewController: UIViewController {
     
     @objc func onSigSwitchValueChange(_ sender: UISwitch) {
         if CLLocationManager.authorizationStatus() == .authorizedAlways && sender.isOn {
+            sigChangeLabel.text = "Stop Significant Monitoring"
             manager.startUpdatingLocation()
             sigSwitch.setOn(false, animated: true)
         } else {
             sigSwitch.setOn(true, animated: true)
+            sigChangeLabel.text = "Start Significant Monitoring"
             manager.stopUpdatingLocation()
         }
     }
@@ -372,6 +384,12 @@ class MapViewController: UIViewController {
             }
         }
     }
+    
+    @objc func onResetBtnClick(_ sender: UIButton) {
+        
+        hcKalmanFilter = nil
+        resetKalmanFilter = true
+    }
 }
 
 extension MapViewController: CLLocationManagerDelegate {
@@ -395,6 +413,8 @@ extension MapViewController: CLLocationManagerDelegate {
             logField.isHidden = false
         }
         
+        print(log)
+        
         logs.insert(log, at: 0)
         
         self.logField.beginUpdates()
@@ -408,10 +428,13 @@ extension MapViewController: CLLocationManagerDelegate {
         requestBtn.setTitle("", for: .normal)
         mapView.userTrackingMode = .follow
         
+        manager.stopUpdatingLocation()
+        
         guard let currentLocation = locations.first else { return }
         
         if self.hcKalmanFilter == nil {
             self.hcKalmanFilter = HCKalmanAlgorithm(initialLocation: currentLocation)
+            initialLocation = currentLocation
         } else {
             
             if let hcKalmanFilter = self.hcKalmanFilter {
@@ -421,9 +444,13 @@ extension MapViewController: CLLocationManagerDelegate {
                 } else {
                     
                     let kalmanLocation = hcKalmanFilter.processState(currentLocation: currentLocation)
-                    print(kalmanLocation.altitude)
                     
-                    logExcSteps("Altitude: \(kalmanLocation.altitude)")
+                    let distanceBetween: CLLocationDistance =
+                        currentLocation.distance(from: initialLocation)
+                    
+                    let distanceDiff = String(format: "%.2f", distanceBetween)
+                    
+                    logExcSteps("Altitude: \(kalmanLocation.altitude)\nLocation Distance: \(distanceDiff)")
                 }
             }
         }
