@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fgy-8e-L9F">
+    <device id="retina3_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue-Medium</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--User Identification-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController storyboardIdentifier="UserIdentifcationController" id="BYZ-38-t0r" customClass="UserIdentifcationController" customModule="Geofencing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleAspectFit" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Employee ID" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="p72-f1-hQn">
+                                <rect key="frame" x="36" y="100" width="248" height="30"/>
+                                <color key="tintColor" red="0.0" green="0.0" blue="0.50196078431372548" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="JvM-SW-pt1"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="continue" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="honorifix-prefix"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="yrQ-7c-utC"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Select Floor" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZwP-rU-tx2">
+                                <rect key="frame" x="36" y="145" width="248" height="30"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Jit-MB-WeM"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="dRp-2j-DtS"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Select Department" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="exR-bf-Ev4">
+                                <rect key="frame" x="36" y="190" width="248" height="30"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="EGn-hO-zjm"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="gjW-y5-oJd"/>
+                                </connections>
+                            </textField>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZqO-Ps-3Cv">
+                                <rect key="frame" x="36" y="175" width="248" height="0.0"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" id="Whu-VL-aaf"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="listViewcell" id="ezu-0k-mn6">
+                                        <rect key="frame" x="0.0" y="28" width="248" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ezu-0k-mn6" id="A7c-0A-5QW">
+                                            <rect key="frame" x="0.0" y="0.0" width="248" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="oJh-oZ-eNV"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="5rc-2a-6IU"/>
+                                </connections>
+                            </tableView>
+                            <navigationBar contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="OVW-pv-V0s">
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="0.0" green="0.0" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="barTintColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
+                                <textAttributes key="largeTitleTextAttributes">
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="User Identifcation" id="Jfv-uj-aTd"/>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" red="0.88235294117647056" green="0.88235294117647056" blue="0.88235294117647056" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="p72-f1-hQn" firstAttribute="top" secondItem="OVW-pv-V0s" secondAttribute="bottom" constant="36" id="25l-Dl-RGI"/>
+                            <constraint firstItem="OVW-pv-V0s" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="9rh-aU-1ji"/>
+                            <constraint firstItem="ZqO-Ps-3Cv" firstAttribute="top" secondItem="OVW-pv-V0s" secondAttribute="bottom" constant="111" id="A5k-4H-C76"/>
+                            <constraint firstItem="ZwP-rU-tx2" firstAttribute="leading" secondItem="p72-f1-hQn" secondAttribute="leading" id="A9x-Ew-XpE"/>
+                            <constraint firstItem="p72-f1-hQn" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="80" id="FbE-bR-14d"/>
+                            <constraint firstItem="OVW-pv-V0s" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="K8f-bi-vYe"/>
+                            <constraint firstItem="exR-bf-Ev4" firstAttribute="trailing" secondItem="p72-f1-hQn" secondAttribute="trailing" id="LMb-2J-9lg"/>
+                            <constraint firstItem="ZwP-rU-tx2" firstAttribute="top" secondItem="p72-f1-hQn" secondAttribute="bottom" constant="15" id="ONz-Rg-wZI"/>
+                            <constraint firstItem="OVW-pv-V0s" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="c9r-P5-rJS"/>
+                            <constraint firstItem="exR-bf-Ev4" firstAttribute="top" secondItem="ZwP-rU-tx2" secondAttribute="bottom" constant="15" id="emb-SY-llC"/>
+                            <constraint firstItem="ZwP-rU-tx2" firstAttribute="trailing" secondItem="p72-f1-hQn" secondAttribute="trailing" id="esX-qy-359"/>
+                            <constraint firstItem="exR-bf-Ev4" firstAttribute="leading" secondItem="ZwP-rU-tx2" secondAttribute="leading" id="jSC-2M-tDG"/>
+                            <constraint firstItem="p72-f1-hQn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="36" id="liH-Il-gKW"/>
+                            <constraint firstItem="ZqO-Ps-3Cv" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="36" id="tNx-CA-CWF"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="p72-f1-hQn" secondAttribute="trailing" constant="36" id="xHv-Zl-LdX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZqO-Ps-3Cv" secondAttribute="trailing" constant="36" id="yzV-oQ-hVi"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="User Identification" id="n5X-6s-dOp"/>
+                    <connections>
+                        <outlet property="deptTextField" destination="exR-bf-Ev4" id="JPi-tF-hmI"/>
+                        <outlet property="empIDTextField" destination="p72-f1-hQn" id="18g-lm-CVf"/>
+                        <outlet property="floorTextField" destination="ZwP-rU-tx2" id="7BZ-eW-gop"/>
+                        <outlet property="listView" destination="ZqO-Ps-3Cv" id="paD-P3-Jjf"/>
+                        <outlet property="listViewHeightConstraint" destination="Whu-VL-aaf" id="A69-Jc-LY4"/>
+                        <outlet property="listViewTopConstarint" destination="A5k-4H-C76" id="FCc-Xz-7Pj"/>
+                        <outlet property="userIdNavItem" destination="Jfv-uj-aTd" id="q8F-6Y-LO4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="316.875" y="-145.77464788732394"/>
+        </scene>
+        <!--Geofence-->
+        <scene sceneID="MrL-Go-bgb">
+            <objects>
+                <viewController storyboardIdentifier="MapViewController" id="fgy-8e-L9F" customClass="MapViewController" customModule="Geofencing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8kO-IU-Qei">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="ooj-kI-dsP"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Geofence" id="iId-WY-Jna"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vf6-NE-7Vs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1635" y="-146"/>
+        </scene>
+    </scenes>
+</document>
