@@ -21,11 +21,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Geo-fencing want to know your location</string>
+    <string>$(PRODUCT_NAME) want to know your location</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>Geo-fencing want to know your location</string>
+    <string>$(PRODUCT_NAME) want to know your location</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Geo-fencing want to know your location</string>
+    <string>$(PRODUCT_NAME) want to know your location</string>
+    <key>NSMotionUsageDescription</key>
+    <string> $(PRODUCT_NAME) know your motion </string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

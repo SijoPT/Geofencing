@@ -9,30 +9,41 @@
 import CoreLocation
 import UserNotifications
 import HCKalmanFilter
+import CoreMotion
 import MapKit
 import UIKit
 
 class MapViewController: UIViewController {
     
     var resetKalmanFilter: Bool = false
+    
     var hcKalmanFilter: HCKalmanAlgorithm?
     
     private static let shared = MapViewController()
     
+    private let companyCoordinate = CLLocationCoordinate2D(latitude: 10.029009, longitude: 76.337729)
+    
     private var logs = [String]()
+    
     private let logCellId = "logCell"
     
     private var mapViewAnchors = [NSLayoutConstraint]()
     
     private var initialLocation: CLLocation!
     
+    private var userEnteredInRegion = Date()
+    
+    let activityManager = CMMotionActivityManager()
+    
+    let pedoMeter = CMPedometer()
+    
     // Initialize Core Location manager instance
     
     private let manager: CLLocationManager = {
         
         let locm = CLLocationManager()
-        locm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        locm.distanceFilter = kCLLocationAccuracyNearestTenMeters
+        locm.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locm.distanceFilter = kCLDistanceFilterNone
         locm.allowsBackgroundLocationUpdates = true
         locm.showsBackgroundLocationIndicator = true
         
@@ -69,6 +80,28 @@ class MapViewController: UIViewController {
         return hLbl
     }()
     
+    private let actvityLabel: UILabel = {
+        
+        let aLbl = UILabel()
+        aLbl.textColor = .white
+        aLbl.font = UIFont(name: "Helvetica Neue", size: 18)
+        aLbl.text = "Activity"
+        aLbl.numberOfLines = 0
+        aLbl.textAlignment = .center
+        return aLbl
+    }()
+    
+    private let stepsLabel: UILabel = {
+        
+        let sLbl = UILabel()
+        sLbl.textColor = .white
+        sLbl.font = UIFont(name: "Helvetica Neue", size: 18)
+        sLbl.text = "Steps"
+        sLbl.numberOfLines = 0
+        sLbl.textAlignment = .center
+        return sLbl
+    }()
+    
     private let reqLabel: UILabel = {
         
         let rLbl = UILabel()
@@ -84,7 +117,7 @@ class MapViewController: UIViewController {
         let sLbl = UILabel()
         sLbl.textColor = .white
         sLbl.font = UIFont(name: "Helvetica Neue", size: 18)
-        sLbl.text = "Start Significant Monitoring"
+        sLbl.text = "Start Monitoring"
         sLbl.numberOfLines = 0
         return sLbl
     }()
@@ -150,20 +183,11 @@ class MapViewController: UIViewController {
         return mapSzBtn
     }()
     
-    private let resetBtn: UIButton = {
-        
-        let rBtn = UIButton()
-        rBtn.backgroundColor = .white
-        rBtn.setTitleColor(.blue, for: .normal)
-        rBtn.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 20)
-        rBtn.setTitle("Reset", for: .normal)
-        rBtn.addTarget(self, action: #selector(onResetBtnClick(_:)), for: .touchUpInside)
-        return rBtn
-    }()
-    
     fileprivate func addSubViews() {
         view.addSubview(headerView)
         headerView.addSubview(headerLabel)
+        headerView.addSubview(actvityLabel)
+        headerView.addSubview(stepsLabel)
         view.addSubview(mapView)
         view.addSubview(setView)
         setView.addSubview(reqLabel)
@@ -172,7 +196,6 @@ class MapViewController: UIViewController {
         setView.addSubview(requestBtn)
         setView.addSubview(sigSwitch)
         setView.addSubview(mapSwitch)
-        setView.addSubview(resetBtn)
         view.addSubview(logField)
         view.addSubview(mapSizeBtn)
     }
@@ -181,7 +204,15 @@ class MapViewController: UIViewController {
         
         _ = headerView.anchor(view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topConstant: 20, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 64)
         
-        _ = headerLabel.anchorWithZeroConstant(top: headerView.topAnchor, left: headerView.leftAnchor, bottom: headerView.bottomAnchor, right: headerView.rightAnchor)
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+        headerLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+        
+        _ = stepsLabel.anchor(headerView.topAnchor, left: headerView.leftAnchor, bottom: headerView.bottomAnchor, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 100, heightConstant: 0)
+        
+
+        _ = actvityLabel.anchor(headerView.topAnchor, left: nil, bottom: headerView.bottomAnchor, right: headerView.rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 100, heightConstant: 0)
+
         
         _ = setView.anchor(headerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topConstant: 8, leftConstant: 8, bottomConstant: 0, rightConstant: 8, widthConstant: 0, heightConstant: 180)
         
@@ -196,9 +227,6 @@ class MapViewController: UIViewController {
         _ = sigSwitch.anchor(sigChangeLabel.topAnchor, left: nil, bottom: nil, right: requestBtn.rightAnchor, topConstant: 10, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 50, heightConstant: 30)
         
         _ = mapSwitch.anchor(mapLabel.topAnchor , left: nil, bottom: nil, right: requestBtn.rightAnchor, topConstant: 25, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 50, heightConstant: 30)
-        
-        _ = resetBtn.anchor(nil, left: mapLabel.leftAnchor, bottom: setView.bottomAnchor, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 8, rightConstant: 0, widthConstant: 0, heightConstant: 25)
-        
         
         _ = logField.anchor(setView.bottomAnchor, left: setView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: setView.rightAnchor, topConstant: 8, leftConstant: 0, bottomConstant: 8, rightConstant: 0, widthConstant: 0, heightConstant: 0)
         
@@ -215,8 +243,6 @@ class MapViewController: UIViewController {
         mapView.layer.masksToBounds = true
         requestBtn.layer.cornerRadius = 5.0
         requestBtn.layer.masksToBounds = true
-        resetBtn.layer.cornerRadius = 5.0
-        resetBtn.layer.masksToBounds = true
         mapSwitch.layer.cornerRadius = 5.0
         mapSwitch.layer.masksToBounds = true
         logField.layer.cornerRadius = 5.0
@@ -257,73 +283,30 @@ class MapViewController: UIViewController {
         logField.dataSource = self
         
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (granted, error) in print(granted)}
+        
+        monitorUserActivity()
     }
     
-    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
-        manager.requestLocation()
-    }
+//    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+//        manager.requestLocation()
+//    }
     
     // Which override the system status bar hidden property to true
-    override var prefersStatusBarHidden: Bool {
-        
-        return true
-    }
+//    override var prefersStatusBarHidden: Bool {
+//
+//        return true
+//    }
     
-    fileprivate func getLocalAddressIfNeeded(_ location: CLLocation) {
-        let geoCoder = CLGeocoder()
-        geoCoder.reverseGeocodeLocation(location) { (data, error) in
-            
-            guard let placeMarks = data else { return }
-            let loc: CLPlacemark = placeMarks[0]
-            self.mapView.centerCoordinate = location.coordinate
-            print(" locality : \(String(describing: loc.locality)), loc.subLocality : \(String(describing: loc.subLocality))")
-        }
-    }
-    
-    func notifyUserWith(_ subtitle: String) {
-        
-        if UIApplication.shared.applicationState != .background {
-            // the alert view
-            let alert = UIAlertController(title: "", message: subtitle, preferredStyle: .alert)
-            self.present(alert, animated: true, completion: nil)
-            
-            // change to desired number of seconds (in this case 5 seconds)
-            let when = DispatchTime.now() + 5
-            DispatchQueue.main.asyncAfter(deadline: when){
-                // your code with delay
-                alert.dismiss(animated: true, completion: nil)
-            }
-        } else {
-            
-            let content = UNMutableNotificationContent()
-            content.title = "Geofencing"
-            content.subtitle = subtitle
-            content.sound = .default()
-            let request = UNNotificationRequest(identifier: "notifIde", content: content, trigger: nil)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        }
-    }
-    
-    @objc func onRequestCurrentLocBtnClick(_ sender: UIButton) {
-        requestBtn.setTitle("•", for: .normal)
-        manager.requestLocation()
-    }
-    
-    @objc func onSigSwitchValueChange(_ sender: UISwitch) {
-        if CLLocationManager.authorizationStatus() == .authorizedAlways && sender.isOn {
-            sigChangeLabel.text = "Stop Significant Monitoring"
-            manager.startUpdatingLocation()
-            sigSwitch.setOn(false, animated: true)
-        } else {
-            sigSwitch.setOn(true, animated: true)
-            sigChangeLabel.text = "Start Significant Monitoring"
-            manager.stopUpdatingLocation()
-        }
-    }
-    
-    @objc func onMapSwitchValueChange(_ sender: UISwitch) {
-        showMapWithAnimation()
-    }
+//    fileprivate func getLocalAddressIfNeeded(_ location: CLLocation) {
+//        let geoCoder = CLGeocoder()
+//        geoCoder.reverseGeocodeLocation(location) { (data, error) in
+//
+//            guard let placeMarks = data else { return }
+//            let loc: CLPlacemark = placeMarks[0]
+//            self.mapView.centerCoordinate = location.coordinate
+//            print(" locality : \(String(describing: loc.locality)), loc.subLocality : \(String(describing: loc.subLocality))")
+//        }
+//    }
     
     func showMapWithAnimation() {
         
@@ -353,8 +336,80 @@ class MapViewController: UIViewController {
         }
     }
     
+    func notifyUserWith(_ subtitle: String) {
+        
+        if UIApplication.shared.applicationState != .background {
+            // the alert view
+            let alert = UIAlertController(title: "", message: subtitle, preferredStyle: .alert)
+            self.present(alert, animated: true, completion: nil)
+            
+            // change to desired number of seconds (in this case 5 seconds)
+            let when = DispatchTime.now() + 5
+            DispatchQueue.main.asyncAfter(deadline: when){
+                // your code with delay
+                alert.dismiss(animated: true, completion: nil)
+            }
+        } else {
+            
+            let content = UNMutableNotificationContent()
+            content.title = "Geofencing"
+            content.subtitle = subtitle
+            content.sound = .default()
+            let request = UNNotificationRequest(identifier: "notifIde", content: content, trigger: nil)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }
+    }
+    
     fileprivate func initialMapViewConstarins() {
         self.mapViewAnchors = self.mapView.anchorWithZeroConstant(top: self.logField.topAnchor, left: self.logField.leftAnchor, bottom: self.logField.bottomAnchor, right: self.logField.rightAnchor)
+    }
+    
+    private func startMonitoring() {
+        
+        let region = CLCircularRegion(center: companyCoordinate, radius: 4, identifier: "CompanyRegionIdentifier")
+        
+        manager.startMonitoring(for: region)
+        
+        mapView.removeOverlays(mapView.overlays)
+        
+        let circle = MKCircle(center: companyCoordinate, radius: region.radius)
+        
+        mapView.add(circle)
+        
+        manager.startUpdatingLocation()
+    }
+    
+    
+    private func stopMonitoring() {
+        
+        let region = CLCircularRegion(center: companyCoordinate, radius: 4, identifier: "CompanyRegionIdentifier")
+        
+        manager.stopMonitoring(for: region)
+        
+        mapView.removeOverlays(mapView.overlays)
+        
+        manager.stopUpdatingLocation()
+    }
+    
+    @objc func onRequestCurrentLocBtnClick(_ sender: UIButton) {
+        requestBtn.setTitle("•", for: .normal)
+        manager.requestLocation()
+    }
+    
+    @objc func onSigSwitchValueChange(_ sender: UISwitch) {
+        if CLLocationManager.authorizationStatus() == .authorizedAlways && sender.isOn {
+            sigChangeLabel.text = "Stop Monitoring"
+            stopMonitoring()
+            sigSwitch.setOn(false, animated: true)
+        } else {
+            sigSwitch.setOn(true, animated: true)
+            sigChangeLabel.text = "Start Monitoring"
+            startMonitoring()
+        }
+    }
+    
+    @objc func onMapSwitchValueChange(_ sender: UISwitch) {
+        showMapWithAnimation()
     }
     
     @objc func onMapSizeBtnClick(_ sender: UIButton) {
@@ -384,12 +439,6 @@ class MapViewController: UIViewController {
             }
         }
     }
-    
-    @objc func onResetBtnClick(_ sender: UIButton) {
-        
-        hcKalmanFilter = nil
-        resetKalmanFilter = true
-    }
 }
 
 extension MapViewController: CLLocationManagerDelegate {
@@ -399,7 +448,7 @@ extension MapViewController: CLLocationManagerDelegate {
         switch status {
         
         case .authorizedWhenInUse, .authorizedAlways:
-            manager.requestLocation()
+            self.manager.requestLocation()
             
         default :
             print("Location access denied by user.")
@@ -428,7 +477,7 @@ extension MapViewController: CLLocationManagerDelegate {
         requestBtn.setTitle("", for: .normal)
         mapView.userTrackingMode = .follow
         
-        manager.stopUpdatingLocation()
+        stopMonitoring()
         
         guard let currentLocation = locations.first else { return }
         
@@ -462,11 +511,35 @@ extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         notifyUserWith("Inside Gadgeon Smart Systems.")
+        userEnteredInRegion = NSDate() as Date
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         notifyUserWith("Outside Gadgeon Smart Systems.")
     }
+}
+
+
+extension MapViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        print(#function)
+    }
+    
+    func mapView(_ mapView: MKMapView, didFailToLocateUserWithError error: Error) {
+        print(#function, error.localizedDescription)
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let circleOverlay = overlay as? MKCircle else { return MKOverlayRenderer() }
+        
+        let circleRenderer = MKCircleRenderer(circle: circleOverlay)
+        circleRenderer.strokeColor = 0x7cc13c.color
+        circleRenderer.fillColor = 0x7cc13c.color
+        circleRenderer.alpha = 0.5
+        return circleRenderer
+    }
+    
 }
 
 extension MapViewController: UITableViewDelegate {
@@ -486,6 +559,68 @@ extension MapViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: logCellId, for: indexPath)
         cell.textLabel?.text = logs[indexPath.row]
         return cell
+    }
+}
+
+extension MapViewController {
+    
+    private func monitorUserActivity() {
+        
+        if(CMMotionActivityManager.isActivityAvailable()){
+            self.activityManager.startActivityUpdates(to: .main, withHandler: { (data: CMMotionActivity!) -> Void in
+                
+                DispatchQueue.main.async { () -> Void in
+                    
+                    var userActivity = "UnKnown"
+                    
+                    if(data.stationary == true) {
+                        userActivity = "Stationary"
+                    } else if (data.walking == true) {
+                        userActivity = "Walking"
+                    } else if (data.running == true) {
+                        userActivity = "Running"
+                    } else if (data.automotive == true) {
+                        userActivity = "Automotive"
+                    } else if (data.cycling == true) {
+                        userActivity = "Cycling"
+                    }
+                    
+                    self.actvityLabel.text = userActivity
+                }
+                
+            })
+        }
+        
+        monitorUserSteps()
+    }
+    
+    private func monitorUserSteps() {
+        
+        if(CMPedometer.isStepCountingAvailable()) {
+            
+            self.pedoMeter.queryPedometerData(from: userEnteredInRegion, to: NSDate() as Date) { (data : CMPedometerData!, error) -> Void in
+                print(data)
+                DispatchQueue.main .async { () -> Void in
+                    if(error == nil){
+                        print("\(data.numberOfSteps)")
+                    }
+                }
+                
+            }
+            
+            self.pedoMeter.startUpdates(from: userEnteredInRegion) { (data: CMPedometerData!, error) -> Void in
+                DispatchQueue.main.async {() -> Void in
+                    if(error == nil){
+                        
+                        self.stepsLabel.text = String(format: "%d", data.numberOfSteps)
+                        
+                        print("Steps: \(data.numberOfSteps)")
+                        print("FloorAsc: \(data.floorsAscended!)")
+                        print("FloorDsc: \(data.floorsDescended!)")
+                    }
+                }
+            }
+        }
     }
 }
 
