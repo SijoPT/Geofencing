@@ -19,6 +19,8 @@ class MapViewController: UIViewController {
     
     var hcKalmanFilter: HCKalmanAlgorithm?
     
+    var lastFloor: Int = 0
+    
     private static let shared = MapViewController()
     
     private let companyCoordinate = CLLocationCoordinate2D(latitude: 10.029009, longitude: 76.337729)
@@ -30,8 +32,6 @@ class MapViewController: UIViewController {
     private var mapViewAnchors = [NSLayoutConstraint]()
     
     private var initialLocation: CLLocation!
-    
-    private var userEnteredInRegion = Date()
     
     let activityManager = CMMotionActivityManager()
     
@@ -133,7 +133,7 @@ class MapViewController: UIViewController {
     }()
     
     private let requestBtn: UIButton = {
-       
+        
         let rBtn = UIButton()
         rBtn.backgroundColor = .white
         rBtn.setTitleColor(.blue, for: .normal)
@@ -160,13 +160,11 @@ class MapViewController: UIViewController {
         mapSw.addTarget(self, action: #selector(onMapSwitchValueChange(_:)), for: .valueChanged)
         return mapSw
     }()
-
+    
     lazy var logField: UITableView = {
         
         let tableView = UITableView()
         tableView.isHidden = true
-        tableView.backgroundColor = .black
-        tableView.separatorColor = .clear
         tableView.showsVerticalScrollIndicator = false
         tableView.alwaysBounceVertical = true
         tableView.allowsSelection = false
@@ -210,9 +208,9 @@ class MapViewController: UIViewController {
         
         _ = stepsLabel.anchor(headerView.topAnchor, left: headerView.leftAnchor, bottom: headerView.bottomAnchor, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 100, heightConstant: 0)
         
-
+        
         _ = actvityLabel.anchor(headerView.topAnchor, left: nil, bottom: headerView.bottomAnchor, right: headerView.rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 100, heightConstant: 0)
-
+        
         
         _ = setView.anchor(headerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topConstant: 8, leftConstant: 8, bottomConstant: 0, rightConstant: 8, widthConstant: 0, heightConstant: 180)
         
@@ -279,6 +277,8 @@ class MapViewController: UIViewController {
         mapView.isHidden = true
         
         logField.register(LogViewCell.self, forCellReuseIdentifier: logCellId)
+        logField.backgroundColor = .black
+        logField.separatorColor = .clear
         logField.delegate = self
         logField.dataSource = self
         
@@ -287,26 +287,26 @@ class MapViewController: UIViewController {
         monitorUserActivity()
     }
     
-//    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
-//        manager.requestLocation()
-//    }
+    //    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+    //        manager.requestLocation()
+    //    }
     
     // Which override the system status bar hidden property to true
-//    override var prefersStatusBarHidden: Bool {
-//
-//        return true
-//    }
+    //    override var prefersStatusBarHidden: Bool {
+    //
+    //        return true
+    //    }
     
-//    fileprivate func getLocalAddressIfNeeded(_ location: CLLocation) {
-//        let geoCoder = CLGeocoder()
-//        geoCoder.reverseGeocodeLocation(location) { (data, error) in
-//
-//            guard let placeMarks = data else { return }
-//            let loc: CLPlacemark = placeMarks[0]
-//            self.mapView.centerCoordinate = location.coordinate
-//            print(" locality : \(String(describing: loc.locality)), loc.subLocality : \(String(describing: loc.subLocality))")
-//        }
-//    }
+    //    fileprivate func getLocalAddressIfNeeded(_ location: CLLocation) {
+    //        let geoCoder = CLGeocoder()
+    //        geoCoder.reverseGeocodeLocation(location) { (data, error) in
+    //
+    //            guard let placeMarks = data else { return }
+    //            let loc: CLPlacemark = placeMarks[0]
+    //            self.mapView.centerCoordinate = location.coordinate
+    //            print(" locality : \(String(describing: loc.locality)), loc.subLocality : \(String(describing: loc.subLocality))")
+    //        }
+    //    }
     
     func showMapWithAnimation() {
         
@@ -344,7 +344,7 @@ class MapViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
             
             // change to desired number of seconds (in this case 5 seconds)
-            let when = DispatchTime.now() + 5
+            let when = DispatchTime.now() + 3
             DispatchQueue.main.asyncAfter(deadline: when){
                 // your code with delay
                 alert.dismiss(animated: true, completion: nil)
@@ -392,6 +392,7 @@ class MapViewController: UIViewController {
     }
     
     @objc func onRequestCurrentLocBtnClick(_ sender: UIButton) {
+        
         requestBtn.setTitle("•", for: .normal)
         manager.requestLocation()
     }
@@ -446,7 +447,7 @@ extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         
         switch status {
-        
+            
         case .authorizedWhenInUse, .authorizedAlways:
             self.manager.requestLocation()
             
@@ -511,11 +512,12 @@ extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         notifyUserWith("Inside Gadgeon Smart Systems.")
-        userEnteredInRegion = NSDate() as Date
+        UserDefaults.standard.setEmployeeLastActivityDate(Date())
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         notifyUserWith("Outside Gadgeon Smart Systems.")
+        UserDefaults.standard.setEmployeeLastActivityDate(Date())
     }
 }
 
@@ -591,14 +593,45 @@ extension MapViewController {
             })
         }
         
-        monitorUserSteps()
+        startUpdatingEvents()
     }
     
-    private func monitorUserSteps() {
+    fileprivate func startUpdate(_ date: Date) {
+        
+        if CMPedometer.isFloorCountingAvailable() {
+            self.pedoMeter.startUpdates(from: date) { (data: CMPedometerData!, error) -> Void in
+                DispatchQueue.main.async {() -> Void in
+                    if(error == nil){
+                        
+                        self.stepsLabel.text = "\(data.numberOfSteps)"
+                        
+                        let flAsc = data.floorsAscended as! Int
+                        let flDsc = data.floorsDescended as! Int
+                        
+                        let exactFloor = flAsc - flDsc
+                        
+                        if self.lastFloor != exactFloor && exactFloor > -1 && exactFloor < 3 {
+                            self.lastFloor = exactFloor
+                            self.notifyUserWith("\(exactFloor + 1) Floor")
+                        }
+                        
+                        let log = "FloorAsc: \(data.floorsAscended!)" + "\nFloorDsc: \(data.floorsDescended!)" + "\nexactFloor: \(exactFloor)"
+                        
+                        self.logExcSteps(log)
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    private func startUpdatingEvents() {
+        
+        let date  = UserDefaults.standard.employeeLastActivityDate()
         
         if(CMPedometer.isStepCountingAvailable()) {
             
-            self.pedoMeter.queryPedometerData(from: userEnteredInRegion, to: NSDate() as Date) { (data : CMPedometerData!, error) -> Void in
+            self.pedoMeter.queryPedometerData(from: date, to: NSDate() as Date) { (data : CMPedometerData!, error) -> Void in
                 print(data)
                 DispatchQueue.main .async { () -> Void in
                     if(error == nil){
@@ -608,21 +641,11 @@ extension MapViewController {
                 
             }
             
-            self.pedoMeter.startUpdates(from: userEnteredInRegion) { (data: CMPedometerData!, error) -> Void in
-                DispatchQueue.main.async {() -> Void in
-                    if(error == nil){
-                        
-                        self.stepsLabel.text = String(format: "%d", data.numberOfSteps)
-                        
-                        print("Steps: \(data.numberOfSteps)")
-                        print("FloorAsc: \(data.floorsAscended!)")
-                        print("FloorDsc: \(data.floorsDescended!)")
-                    }
-                }
-            }
+            startUpdate(date)
         }
     }
 }
+
 
 private class LogViewCell: UITableViewCell {
     
